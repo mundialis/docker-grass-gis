@@ -98,10 +98,19 @@ RUN /src/proj-4.9.3/configure && make -j4 && make install
 # Checkout and install GRASS GIS
 WORKDIR /src
 
-# TODO change trunk to release_branch74
-RUN svn checkout https://svn.osgeo.org/grass/grass/trunk grass_trunk
+## TODO change trunk to release_branch74
+#RUN svn checkout https://svn.osgeo.org/grass/grass/trunk grass_trunk
+RUN wget https://grass.osgeo.org/grass75/source/snapshot/grass-7.5.svn_src_snapshot_latest.tar.gz
+# unpack source code package and remove tarball archive:
+RUN tar xvfz grass-7.5.svn_src_snapshot_latest.tar.gz
+RUN rm -f grass-7.5.svn_src_snapshot_latest.tar.gz
 
+# rename source code directory
+RUN mv grass-7.5.svn_src_snapshot_20??_??_?? grass_trunk
+
+# update snapshot once more to grab latest updates and fixes:
 WORKDIR /src/grass_trunk
+RUN svn update
 
 # Set environmental variables for GRASS GIS compilation
 ENV INTEL "-march=native -std=gnu99 -fexceptions -fstack-protector -m64"
