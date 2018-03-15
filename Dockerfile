@@ -112,10 +112,10 @@ RUN mv grass-7.5.svn_src_snapshot_20??_??_?? grass_trunk
 WORKDIR /src/grass_trunk
 RUN svn update
 
-# Set environmental variables for GRASS GIS compilation
+# Set environmental variables for GRASS GIS compilation, without debug symbols
 ENV INTEL "-march=native -std=gnu99 -fexceptions -fstack-protector -m64"
-ENV MYCFLAGS "-Wall -ggdb -fno-fast-math -fno-common $INTEL $MYGCC"
-ENV MYLDFLAGS "-Wl,--no-undefined"
+ENV MYCFLAGS "-Wall -fno-fast-math -fno-common"
+ENV MYLDFLAGS "-s -Wl,--no-undefined"
 # CXX stuff:
 ENV LD_LIBRARY_PATH "/usr/local/lib"
 ENV LDFLAGS "$MYLDFLAGS"
@@ -173,3 +173,5 @@ ENV GRASS_SKIP_MAPSET_OWNER_CHECK 1
 # for python3 usage:
 RUN apt install language-pack-en-base -y
 ENV LC_ALL "en_US.UTF-8"
+
+# TODO: remove compile tools (unless needed for GRASS GIS extension installation)
