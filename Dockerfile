@@ -115,7 +115,7 @@ RUN svn update
 
 # Set environmental variables for GRASS GIS compilation, without debug symbols
 ENV INTEL "-march=native -std=gnu99 -fexceptions -fstack-protector -m64"
-ENV MYCFLAGS "-Wall -fno-fast-math -fno-common"
+ENV MYCFLAGS "-Wall -fno-fast-math -fno-common $INTEL"
 ENV MYLDFLAGS "-s -Wl,--no-undefined"
 # CXX stuff:
 ENV LD_LIBRARY_PATH "/usr/local/lib"
@@ -168,7 +168,7 @@ VOLUME /grassdb
 # Clean up the compiled files
 RUN rm -rf /src/*
 
-# GRASS GSI specific
+# GRASS GIS specific
 ENV GRASS_SKIP_MAPSET_OWNER_CHECK 1
 
 # for python3 usage:
