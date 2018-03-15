@@ -90,9 +90,10 @@ WORKDIR /src
 # install the latest projection library for GRASS GIS
 RUN wget http://download.osgeo.org/proj/proj-4.9.3.tar.gz && \
     tar xzvf proj-4.9.3.tar.gz && cd /src/proj-4.9.3/ && \
-    wget http://download.osgeo.org/proj/proj-datumgrid-1.6.zip && \
-    unzip proj-datumgrid-1.6.zip
+    wget http://download.osgeo.org/proj/proj-datumgrid-1.6.zip
 WORKDIR /src/proj-4.9.3
+RUN cd nad && \
+    unzip ../proj-datumgrid-1.6.zip && cd ..
 RUN /src/proj-4.9.3/configure && make -j4 && make install
 
 # Checkout and install GRASS GIS
