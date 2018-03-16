@@ -28,6 +28,7 @@ RUN apt update && apt upgrade -y && \
     libpython3-all-dev \
     libgsl0-dev \
     libncurses5-dev \
+    ncurses \
     zlib1g-dev \
     gettext \
     libtiff-dev \
