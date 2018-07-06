@@ -1,5 +1,8 @@
 FROM ubuntu:18.04
 
+LABEL authors="Sören Gebbert,Carmen Tawalika,Markus Neteler"
+LABEL maintainer="soerengebbert@gmail.com,tawalika@mundialis.de,neteler@mundialis.de"
+
 ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR /tmp
@@ -14,73 +17,69 @@ RUN apt update && apt upgrade -y && \
     add-apt-repository ppa:ubuntugis/ubuntugis-unstable -y && \
     apt update && apt install --no-install-recommends --no-install-suggests \
     build-essential \
-    flex \
-    make \
+    atop \
+    attr \
     bison \
-    gcc \
-    libgcc1 \
+    bzip2 \
+    curl \
+    flex \
     g++ \
-    python3 \
-    python3-dev \
-    python3-dateutil \
-    python3-ply \
-    python3-pip \
-    libpython3-all-dev \
-    libgsl0-dev \
-    libncurses5-dev \
-    ncurses-bin \
-    zlib1g-dev \
+    gcc \
+    gdal-bin \
     gettext \
-    libtiff-dev \
-    libpnglite-dev \
+    git \
+    gnutls-bin \
+    htop \
+    iotop \
+    iperf \
+    iputils-ping \
+    libapt-pkg-perl \
+    libbz2-dev \
     libcairo2 \
     libcairo2-dev \
-    sqlite3 \
-    libsqlite3-dev \
-    libpq-dev \
-    libreadline6 \
-    libreadline6-dev \
-    libfreetype6-dev \
-    libapt-pkg-perl \
-    resolvconf \
-    libjasper-dev \
-    ruby \
-    subversion \
-    libopenjp2-7-dev \
-    libopenjp2-7 \
+    libcurl4-gnutls-dev \
     libfftw3-bin \
     libfftw3-dev \
-    libcurl4-gnutls-dev \
-    libbz2-dev \
-    libgnutls-dev \
-    gnutls-bin \
-    redis-server \
-    redis-tools \
-    proj-data \
-    gdal-bin \
+    libfreetype6-dev \
     libgdal-dev \
     libgeos-dev \
+    libgnutls28-dev \
+    libgsl0-dev \
+    libjasper-dev \
     liblas-c-dev \
     liblas-dev \
-    libspatialite-dev \
+    libncurses5-dev \
+    libopenjp2-7 \
+    libopenjp2-7-dev \
+    libpnglite-dev \
+    libpq-dev \
+    libpython3-all-dev \
     libspatialite7 \
-    moreutils \
-    iotop \
-    atop \
-    htop \
-    iperf \
-    attr \
-    git \
-    vim \
-    curl \
-    wget \
-    unzip \
-    zip \
-    iputils-ping \
-    python3-pandas \
-    libzstd0 \
+    libspatialite-dev \
+    libsqlite3-dev \
+    libtiff-dev \
+    libzstd \
     libzstd-dev \
-    bzip2 -y && \
+    make \
+    moreutils \
+    ncurses-bin \
+    python3 \
+    python3-dateutil \
+    python3-dev \
+    python3-pandas \
+    python3-pip \
+    python3-ply \
+    redis-server \
+    redis-tools \
+    resolvconf \
+    ruby \
+    sqlite3 \
+    subversion \
+    unzip \
+    vim \
+    wget \
+    zip \
+    zlib1g-dev -y && \
     apt-get clean && \
     apt-get autoremove
 
@@ -126,29 +125,29 @@ ENV CXXFLAGS "$MYCXXFLAGS"
 
 # Configure compile and install
 RUN /src/grass_trunk/configure \
-  --with-cxx \
-  --enable-largefile \
-  --with-proj=/usr/local/lib \
-  --with-proj-share=/usr/local/share/proj \
-  --with-gdal \
-  --with-python \
-  --with-geos \
-  --with-sqlite \
-  --with-cairo --with-cairo-ldflags=-lfontconfig \
-  --with-fftw \
-  --with-netcdf \
-  --with-bzlib \
-  --with-zstd \
-  --without-postgres \
-  --without-freetype \
-  --without-openmp \
-  --without-opengl \
-  --without-nls \
-  --without-mysql \
-  --without-odbc \
-  --without-openmp \
-  --without-ffmpeg \
-  --prefix=/usr/local && make -j4 && make install
+    --with-cxx \
+    --enable-largefile \
+    --with-proj=/usr/local/lib \
+    --with-proj-share=/usr/local/share/proj \
+    --with-gdal \
+    --with-python \
+    --with-geos \
+    --with-sqlite \
+    --with-cairo --with-cairo-ldflags=-lfontconfig \
+    --with-fftw \
+    --with-netcdf \
+    --with-bzlib \
+    --with-zstd \
+    --without-postgres \
+    --without-freetype \
+    --without-openmp \
+    --without-opengl \
+    --without-nls \
+    --without-mysql \
+    --without-odbc \
+    --without-openmp \
+    --without-ffmpeg \
+    --prefix=/usr/local && make -j4 && make install
 
 # TODO Install the module to render several maps at once
 
