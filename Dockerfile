@@ -169,6 +169,10 @@ VOLUME /grassdb
 # Clean up the compiled files
 RUN rm -rf /src/*
 
+# Reduce the image size
+RUN apt-get autoremove -y
+RUN apt-get clean -y
+
 # GRASS GIS specific
 ENV GRASS_SKIP_MAPSET_OWNER_CHECK 1
 
