@@ -45,7 +45,6 @@ RUN apt update && apt upgrade -y && \
     libgeos-dev \
     libgnutls28-dev \
     libgsl0-dev \
-    libjasper-dev \
     liblas-c-dev \
     liblas-dev \
     libncurses5-dev \
@@ -58,7 +57,6 @@ RUN apt update && apt upgrade -y && \
     libspatialite-dev \
     libsqlite3-dev \
     libtiff-dev \
-    libzstd \
     libzstd-dev \
     make \
     moreutils \
