@@ -17,7 +17,6 @@ RUN apt update && apt upgrade -y && \
     add-apt-repository ppa:ubuntugis/ubuntugis-unstable -y && \
     apt update && apt install --no-install-recommends --no-install-suggests \
     build-essential \
-    atop \
     attr \
     bison \
     bzip2 \
@@ -27,12 +26,7 @@ RUN apt update && apt upgrade -y && \
     gcc \
     gdal-bin \
     gettext \
-    git \
     gnutls-bin \
-    htop \
-    iotop \
-    iperf \
-    iputils-ping \
     libapt-pkg-perl \
     libbz2-dev \
     libcairo2 \
@@ -53,24 +47,13 @@ RUN apt update && apt upgrade -y && \
     libpnglite-dev \
     libpq-dev \
     libpython3-all-dev \
-    libspatialite7 \
-    libspatialite-dev \
     libsqlite3-dev \
     libtiff-dev \
     libzstd-dev \
     make \
     moreutils \
     ncurses-bin \
-    python3 \
-    python3-dateutil \
-    python3-dev \
-    python3-pandas \
-    python3-pip \
-    python3-ply \
-    redis-server \
-    redis-tools \
     resolvconf \
-    ruby \
     sqlite3 \
     subversion \
     unzip \
