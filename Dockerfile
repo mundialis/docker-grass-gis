@@ -13,56 +13,66 @@ RUN echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-
 
 # Install the dependencies of GRASS GIS
 RUN apt update && apt upgrade -y && \
-    apt install software-properties-common -y && \
-    add-apt-repository ppa:ubuntugis/ubuntugis-unstable -y && \
-    apt update && apt install --no-install-recommends --no-install-suggests \
-    build-essential \
-    attr \
-    bison \
-    bzip2 \
-    curl \
-    flex \
-    g++ \
-    gcc \
-    gdal-bin \
-    gettext \
-    gnutls-bin \
-    libapt-pkg-perl \
-    libbz2-dev \
-    libcairo2 \
-    libcairo2-dev \
-    libcurl4-gnutls-dev \
-    libfftw3-bin \
-    libfftw3-dev \
-    libfreetype6-dev \
-    libgdal-dev \
-    libgeos-dev \
-    libgnutls28-dev \
-    libgsl0-dev \
-    liblas-c-dev \
-    liblas-dev \
-    libncurses5-dev \
-    libopenjp2-7 \
-    libopenjp2-7-dev \
-    libpnglite-dev \
-    libpq-dev \
-    libpython3-all-dev \
-    libsqlite3-dev \
-    libtiff-dev \
-    libzstd-dev \
-    make \
-    moreutils \
-    ncurses-bin \
-    resolvconf \
-    sqlite3 \
-    subversion \
-    unzip \
-    vim \
-    wget \
-    zip \
-    zlib1g-dev -y && \
-    apt-get clean && \
-    apt-get autoremove
+        apt install software-properties-common -y && \
+        add-apt-repository ppa:ubuntugis/ubuntugis-unstable -y && \
+        apt update && apt install --no-install-recommends --no-install-suggests \
+        build-essential \
+        attr \
+        bison \
+        bzip2 \
+        curl \
+        flex \
+        g++ \
+        gcc \
+        gdal-bin \
+        gettext \
+        gnutls-bin \
+        libapt-pkg-perl \
+        libbz2-dev \
+        libcairo2 \
+        libcairo2-dev \
+        libcurl4-gnutls-dev \
+        libfftw3-bin \
+        libfftw3-dev \
+        libfreetype6-dev \
+        libgdal-dev \
+        libgeos-dev \
+        libgnutls28-dev \
+        libgsl0-dev \
+        libjpeg-dev \
+        liblas-c-dev \
+        liblas-dev \
+        libncurses5-dev \
+        libopenjp2-7 \
+        libopenjp2-7-dev \
+        libpnglite-dev \
+        libpq-dev \
+        libproj-dev \
+        libpython3-all-dev \
+        libsqlite3-dev \
+        libtiff-dev \
+        libzstd-dev \
+        gdal-bin \
+        make \
+        moreutils \
+        ncurses-bin \
+        proj-bin \
+        proj-data \
+        python \
+        python-dev \
+        python-numpy \
+        python-pil \
+        python-ply \
+        resolvconf \
+        sqlite3 \
+        subversion \
+        unzip \
+        vim \
+        wget \
+        zip \
+        zlib1g-dev -y && \
+        apt-get clean && \
+        apt-get autoremove
 
 RUN echo LANG="en_US.UTF-8" > /etc/default/locale
 
