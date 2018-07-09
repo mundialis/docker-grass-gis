@@ -11,7 +11,7 @@ WORKDIR /tmp
 # https://stackoverflow.com/questions/40877643/apt-get-install-in-ubuntu-16-04-docker-image-etc-resolv-conf-device-or-reso
 RUN echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-selections
 
-# Install the dependencies of GRASS GIS
+# Install the dependencies of GRASS GIS (we'll locally compile PROJ 4.9)
 RUN apt update && apt upgrade -y && \
         apt install software-properties-common -y && \
         add-apt-repository ppa:ubuntugis/ubuntugis-unstable -y && \
@@ -42,12 +42,14 @@ RUN apt update && apt upgrade -y && \
         libjpeg-dev \
         liblas-c-dev \
         liblas-dev \
+        libnetcdf-dev \
         libncurses5-dev \
         libopenjp2-7 \
         libopenjp2-7-dev \
+        libpdal-dev pdal \
+        libpdal-plugin-python \
         libpnglite-dev \
         libpq-dev \
-        libproj-dev \
         libpython3-all-dev \
         libsqlite3-dev \
         libtiff-dev \
@@ -56,8 +58,7 @@ RUN apt update && apt upgrade -y && \
         make \
         moreutils \
         ncurses-bin \
-        proj-bin \
-        proj-data \
+        netcdf-bin \
         python \
         python-dev \
         python-numpy \
@@ -114,22 +115,22 @@ ENV LDFLAGS "$MYLDFLAGS"
 ENV CFLAGS "$MYCFLAGS"
 ENV CXXFLAGS "$MYCXXFLAGS"
 
-# Configure compile and install
+# Configure compile and install GRASS GIS
 RUN /src/grass_trunk/configure \
     --with-cxx \
     --enable-largefile \
-    --with-proj=/usr/local/lib \
-    --with-proj-share=/usr/local/share/proj \
-    --with-gdal \
+    --with-proj=/usr/local/lib --with-proj-share=/usr/local/share/proj \
     --with-python \
     --with-geos \
     --with-sqlite \
     --with-cairo --with-cairo-ldflags=-lfontconfig \
     --with-fftw \
+    --with-liblas \
+    --with-pdal \
     --with-netcdf \
     --with-bzlib \
     --with-zstd \
-    --without-postgres \
+    --with-postgres --with-postgres-includes="/usr/include/postgresql" \
     --without-freetype \
     --without-openmp \
     --without-opengl \
