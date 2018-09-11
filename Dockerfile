@@ -81,33 +81,32 @@ WORKDIR /src
 
 # install the latest projection library for GRASS GIS
 RUN wget http://download.osgeo.org/proj/proj-4.9.3.tar.gz && \
-    tar xzvf proj-4.9.3.tar.gz && cd /src/proj-4.9.3/ && \
-    wget http://download.osgeo.org/proj/proj-datumgrid-1.6.zip
-WORKDIR /src/proj-4.9.3
-RUN cd nad && \
-    unzip ../proj-datumgrid-1.6.zip && cd ..
-RUN /src/proj-4.9.3/configure && make -j4 && make install
+    tar xzvf proj-4.9.3.tar.gz && \
+    cd /src/proj-4.9.3/ && \
+    wget http://download.osgeo.org/proj/proj-datumgrid-1.6.zip && \
+    cd nad && \
+    unzip ../proj-datumgrid-1.6.zip && \
+    cd .. && \
+    ./configure --prefix=/usr/ && \
+    make && \
+    make install
 
 # Checkout and install GRASS GIS
 WORKDIR /src
-
-## TODO change trunk to release_branch74
-#RUN svn checkout https://svn.osgeo.org/grass/grass/trunk grass_trunk
 RUN wget https://grass.osgeo.org/grass76/source/snapshot/grass-7.6.svn_src_snapshot_latest.tar.gz
 # unpack source code package and remove tarball archive:
-RUN tar xvfz grass-7.6.svn_src_snapshot_latest.tar.gz
-RUN rm -f grass-7.6.svn_src_snapshot_latest.tar.gz
-
-# rename source code directory
-RUN mv grass-7.6.svn_src_snapshot_20??_??_?? grass_trunk
+RUN mkdir /src/grass_build && \
+    tar xfz grass-7.6.svn_src_snapshot_latest.tar.gz --strip=1 -C /src/grass_build && \
+    rm -f grass-7.6.svn_src_snapshot_latest.tar.gz
 
 # update snapshot once more to grab latest updates and fixes:
-WORKDIR /src/grass_trunk
+# cd /src/grass_build
+WORKDIR /src/grass_build
 RUN svn update
 
 # Set environmental variables for GRASS GIS compilation, without debug symbols
 ENV INTEL "-march=native -std=gnu99 -fexceptions -fstack-protector -m64"
-ENV MYCFLAGS "-Wall -fno-fast-math -fno-common $INTEL"
+ENV MYCFLAGS "-O2 -fno-fast-math -fno-common $INTEL"
 ENV MYLDFLAGS "-s -Wl,--no-undefined"
 # CXX stuff:
 ENV LD_LIBRARY_PATH "/usr/local/lib"
@@ -116,20 +115,22 @@ ENV CFLAGS "$MYCFLAGS"
 ENV CXXFLAGS "$MYCXXFLAGS"
 
 # Configure compile and install GRASS GIS
-RUN /src/grass_trunk/configure \
+ENV NUMTHREADS=2
+RUN /src/grass_build/configure \
     --with-cxx \
     --enable-largefile \
-    --with-proj=/usr/local/lib --with-proj-share=/usr/local/share/proj \
+    --with-proj --with-proj-share=/usr/share/proj \
+    --with-gdal \
     --with-python \
     --with-geos \
     --with-sqlite \
+    --with-bzlib \
+    --with-zstd \
     --with-cairo --with-cairo-ldflags=-lfontconfig \
     --with-fftw \
     --with-liblas \
     --with-pdal \
     --with-netcdf \
-    --with-bzlib \
-    --with-zstd \
     --with-postgres --with-postgres-includes="/usr/include/postgresql" \
     --without-freetype \
     --without-openmp \
@@ -139,11 +140,12 @@ RUN /src/grass_trunk/configure \
     --without-odbc \
     --without-openmp \
     --without-ffmpeg \
-    --prefix=/usr/local && make -j4 && make install
+    && make -j $NUMTHREADS && make install && ldconfig
 
-# TODO Install the module to render several maps at once
+# enable simple grass command regardless of version number
+RUN ln -s `find /usr/local/bin -name "grass*"` /usr/local/bin/grass
 
-# Unset environmental variables to avoid laster compilation issues
+# Unset environmental variables to avoid later compilation issues
 ENV INTEL ""
 ENV MYCFLAGS ""
 ENV MYLDFLAGS ""
@@ -153,7 +155,10 @@ ENV LDFLAGS ""
 ENV CFLAGS ""
 ENV CXXFLAGS ""
 
-# Download and unpack the sample data
+# set SHELL var to avoid /bin/sh fallback in interactive GRASS GIS sessions in docker
+ENV SHELL /bin/bash
+
+# Data workdir
 WORKDIR /grassdb
 VOLUME /grassdb
 
@@ -165,10 +170,18 @@ RUN apt-get autoremove -y
 RUN apt-get clean -y
 
 # GRASS GIS specific
+# allow work with MAPSETs that are not owned by current user
 ENV GRASS_SKIP_MAPSET_OWNER_CHECK 1
+
+# install external Python API
+RUN apt-get install python python-pip -y
+RUN pip install grass-session
 
 # for python3 usage:
 RUN apt install language-pack-en-base -y
 ENV LC_ALL "en_US.UTF-8"
 
-# TODO: remove compile tools (unless needed for GRASS GIS extension installation)
+# debug
+RUN grass --config revision version
+
+CMD ["/usr/local/bin/grass", "--version"]
