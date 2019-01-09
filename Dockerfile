@@ -80,12 +80,12 @@ RUN echo LANG="en_US.UTF-8" > /etc/default/locale
 WORKDIR /src
 
 # install the latest projection library for GRASS GIS
-RUN wget http://download.osgeo.org/proj/proj-4.9.3.tar.gz && \
-    tar xzvf proj-4.9.3.tar.gz && \
-    cd /src/proj-4.9.3/ && \
-    wget http://download.osgeo.org/proj/proj-datumgrid-1.6.zip && \
+RUN wget http://download.osgeo.org/proj/proj-5.2.0.tar.gz && \
+    tar xzvf proj-5.2.0.tar.gz && \
+    cd /src/proj-5.2.0/ && \
+    wget http://download.osgeo.org/proj/proj-datumgrid-1.8.zip && \
     cd nad && \
-    unzip ../proj-datumgrid-1.6.zip && \
+    unzip ../proj-datumgrid-1.8.zip && \
     cd .. && \
     ./configure --prefix=/usr/ && \
     make && \
@@ -105,8 +105,7 @@ WORKDIR /src/grass_build
 RUN svn update
 
 # Set environmental variables for GRASS GIS compilation, without debug symbols
-ENV INTEL "-march=native -std=gnu99 -fexceptions -fstack-protector -m64"
-ENV MYCFLAGS "-O2 -fno-fast-math -fno-common $INTEL"
+ENV MYCFLAGS "-O2 -std=gnu99 -m64"
 ENV MYLDFLAGS "-s -Wl,--no-undefined"
 # CXX stuff:
 ENV LD_LIBRARY_PATH "/usr/local/lib"
@@ -117,8 +116,8 @@ ENV CXXFLAGS "$MYCXXFLAGS"
 # Configure compile and install GRASS GIS
 ENV NUMTHREADS=2
 RUN /src/grass_build/configure \
-    --with-cxx \
     --enable-largefile \
+    --with-cxx \
     --with-proj --with-proj-share=/usr/share/proj \
     --with-gdal \
     --with-python \
